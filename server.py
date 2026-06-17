@@ -7,6 +7,7 @@ from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector 
 #function from the package created: TODO
 
+
 app = Flask("Emotion Detection") 
 #Initiate the flask app : TODO
 
@@ -20,15 +21,19 @@ def emotion_detector_fn():
     text_to_analyze = request.args.get('textToAnalyze')
      # Pass the text to the emotion_detector function and store the response 
     response = emotion_detector(text_to_analyze)
-    output_text = type(response).str
-    return output_text
+    #output_text = type(response).str
+    #return output_text
 
-    # Extract the label and score from the response 
+    # Extract the details from the response 
+    response_1 = response.copy()
+    response_1.pop("dominant_emotion", None)
     output_text = "For the given statement, the system response is "
-    for item in response.items():
-        if item != "dominant_emotion":
-            output_text = output_text + str(item) + str(response[item])
-    output_text = output_text + ". The dominant emotion is " + str(response['dominant_emotion']) + "."
+    #last_key = next(reversed(response_1))
+    *rest, (last_key, last_value) = response_1.items()
+    joined_rest = ", ".join(f"'{k}': {v}" for k, v in rest)
+    output_text = output_text + joined_rest + " and '" + str(last_key) + "': " + str(response.get(last_key))
+
+    output_text = output_text + ".\n The dominant emotion is " + str(response.get('dominant_emotion')) + "."
     
 
     if output_text is None:
