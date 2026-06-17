@@ -19,12 +19,19 @@ def emotion_detector(text_to_analyze):
         # Make POST request to Watson NLP API
         response = requests.post(url, json=payload, headers=headers)
         
+
         # Parse the response
         if response.status_code == 200:
             response_data = response.text
             response_data = json.loads(response_data)
+            emotions = response_data["emotionPredictions"][0]["emotion"]
+            highest_emotion, highest_value = max(emotions.items(),  key=lambda item: item[1])            emotions_updated = emotions
+
+            emotions_updated["dominant_[0]emotion"] = highest_emotion
+
+            print(emotions_updated)
         
-            return response_data["emotionPredictions"][0]["emotion"]
+            return emotions_updated
             #response_data["emotionPredictions"]["emotion"]
 
     except Exception as e:
