@@ -21,14 +21,12 @@ def emotion_detector_fn():
     text_to_analyze = request.args.get('textToAnalyze')
      # Pass the text to the emotion_detector function and store the response 
     response = emotion_detector(text_to_analyze)
-    #output_text = type(response).str
-    #return output_text
 
     # Extract the details from the response 
     response_1 = response.copy()
     response_1.pop("dominant_emotion", None)
     output_text = "For the given statement, the system response is "
-    #last_key = next(reversed(response_1))
+
     *rest, (last_key, last_value) = response_1.items()
     joined_rest = ", ".join(f"'{k}': {v}" for k, v in rest)
     output_text = output_text + joined_rest + " and '" + str(last_key) + "': " + str(response.get(last_key))
