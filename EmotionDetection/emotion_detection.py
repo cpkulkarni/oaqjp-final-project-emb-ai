@@ -25,9 +25,10 @@ def emotion_detector(text_to_analyze):
             response_data = response.text
             response_data = json.loads(response_data)
             emotions = response_data["emotionPredictions"][0]["emotion"]
-            highest_emotion, highest_value = max(emotions.items(),  key=lambda item: item[1])            emotions_updated = emotions
+            highest_emotion, highest_value = max(emotions.items(),  key=lambda item: item[1])            
 
-            emotions_updated["dominant_[0]emotion"] = highest_emotion
+            emotions_updated = emotions
+            emotions_updated["dominant_emotion"] = highest_emotion
 
             print(emotions_updated)
         
