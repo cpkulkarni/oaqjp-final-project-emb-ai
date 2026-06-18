@@ -15,31 +15,36 @@ def emotion_detector(text_to_analyze):
     # Request payload with the text to analyze
     payload = { "raw_document": { "text": text_to_analyze } }
     
-    try:
+    #try:
         # Make POST request to Watson NLP API
-        response = requests.post(url, json=payload, headers=headers)
+    response = requests.post(url, json=payload, headers=headers)
+    
+    if response.status_code == 400:
+                emotions = json.loads('{"anger": "None", "disgust": "None", "fear": "None", "joy": "None", "sadness": "None", "dominant_emotion": "None"}')
+                return emotions
+
+
+    # Parse the response
+    if response.status_code == 200:
+        print(response.text)
+        response_data = response.text
+        response_data = json.loads(response_data)
+        emotions = response_data["emotionPredictions"][0]["emotion"]
+        highest_emotion, highest_value = max(emotions.items(),  key=lambda item: item[1])            
+
+        emotions["dominant_emotion"] = highest_emotion
+
+        return emotions
+
         
 
-        # Parse the response
-        if response.status_code == 200:
-            response_data = response.text
-            response_data = json.loads(response_data)
-            emotions = response_data["emotionPredictions"][0]["emotion"]
-            highest_emotion, highest_value = max(emotions.items(),  key=lambda item: item[1])            
-
-            #emotions_updated = emotions
-            emotions["dominant_emotion"] = highest_emotion
-
-            #print(emotions)
-        
-            return emotions
-            #response_data["emotionPredictions"]["emotion"]
-
-    except Exception as e:
-        return {
-            'label': None,
-            'score': None,
-            'error': f'Unexpected error: {str(e)}'
-        }  
+    #except Exception as e:
+    #    response = requests.post(url, json=payload, headers=headers)
+    #    return response 
+    #    return {
+    #        'label': None,
+    #        'score': None,
+    #        'error': f'Unexpected error: {str(e)}'
+    #    }  
 
 

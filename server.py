@@ -34,14 +34,14 @@ def emotion_detector_fn():
     output_text = output_text + ".\n The dominant emotion is " + str(response.get('dominant_emotion')) + "."
     
 
+    if str(response.get('dominant_emotion')) == "None":
+        return "Invalid text! Please try again!"
+
     if output_text is None:
-        return "Invalid input! Try again."
+        return "Invalid text! Please try again!"
     else:
     # Return a formatted string with the sentiment label and score 
         return output_text
-
-
-
 
 @app.route("/")
 def render_index_page():
